@@ -3,11 +3,20 @@ import Victory from "@/assets/Victory.svg"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs"
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
+import { Button } from "@/components/ui/button"
 
 const Auth = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [confirmpassword, setConfirmPassword] = useState("")
+
+    const handlelogin = async ()=>{
+
+    }
+
+    const handlesignup = async ()=>{
+
+    }
 
   return (
     <div className="h-[100vh] w-[100vw] flex items-center justify-center">
@@ -32,9 +41,20 @@ const Auth = () => {
                         <Input placeholder='email' type='email' className="rounded-full p-6" value={email} onChange={e=>setEmail(e.target.value)}></Input>
 
                         <Input placeholder='password' type='password' className="rounded-full p-6" value={password} onChange={e=>setPassword(e.target.value)}></Input>
+
+                        <Button className="rounded-full p-6" onClick={handlelogin}>Login</Button>
                          
                     </TabsContent>
-                    <TabsContent className="" value="signup"></TabsContent>
+                    <TabsContent className="flex flex-col gap-5" value="signup">
+                        <Input placeholder='email' type='email' className="rounded-full p-6" value={email} onChange={e=>setEmail(e.target.value)}></Input>
+
+                        <Input placeholder='password' type='password' className="rounded-full p-6" value={password} onChange={e=>setPassword(e.target.value)}></Input>
+
+                        <Input placeholder='confirmpassword' type='password' className="rounded-full p-6" value={confirmpassword} onChange={e=>setConfirmPassword(e.target.value)}></Input>
+
+                        <Button className="rounded-full p-6" onClick={handlesignup}>Signup</Button>
+
+                    </TabsContent>
                 </Tabs>
             </div>
             </div>
