@@ -55,7 +55,7 @@ export const login = async (request,response,next)=>
         const auth = await compare(password,user.password)
         if(!auth)
         {
-            return responst.status(400).send("Wrong Password")
+            return response.status(400).send("Wrong Password")
         }
         response.cookie("jwt",createtoken(email,user.id),{
             maxAge,
@@ -75,6 +75,35 @@ export const login = async (request,response,next)=>
             }
         })
 
+    }catch(error){
+        console.log({error})
+        return response.status(500).send("Internal server Error")
+    }
+}
+
+export const getUserInfo = async (request,response,next)=>
+{
+    try{
+
+        const userdata = await User.findById(request.userId);
+        if(!userdata){
+            return response.status(404).send('The given user not found')
+        }
+        // console.log("hi")
+        // console.log(request.userId);
+       
+        return response.status(200).json({
+            
+                id:userdata.id,
+                email:userdata.email,
+                profilesetup:userdata.profilesetup,
+                firstname:userdata.firstname,
+                lastname:userdata.lastname,
+                image:userdata.image,
+                color:userdata.color 
+            
+        })
+ 
     }catch(error){
         console.log({error})
         return response.status(500).send("Internal server Error")

@@ -14,35 +14,43 @@ import { GET_USER_INFO } from './utils/constants'
 
 const PrivatRoute = ({children})=>{
   const {userInfo} = useAppStore();
-  const isAuthenticated = !userInfo;
+  const isAuthenticated = !!userInfo;
   return isAuthenticated ? children : <Navigate to="/auth"/>;
 }
 
 const AuthRoute = ({children})=>{
   const {userInfo} = useAppStore();
-  const isAuthenticated = !userInfo;
+  const isAuthenticated = !!userInfo;
   return isAuthenticated ? <Navigate to="/chat"/> : children;
 }
 
 function App() {
   const { userInfo, setUserInfo } = useAppStore();
-  const {loading, setLoading} = useState();
+  const [loading, setLoading] = useState(true);
   useEffect(()=>{
     const getUserData = async ()=>{
       try{
 
       const response = await apiclient.get(GET_USER_INFO,{withCredentials:true});
+      if(response.status==200 && response.data.id)
+      {
+        setUserInfo(response.data)
+      }else{
+        setUserInfo(undefined)
+      }
       console.log({response})
       }catch(error){
-
+        setUserInfo(undefined)
         console.log({error})
+      }finally{
+        setLoading(false)
       }
     }
 
     if(!userInfo){
       getUserData();
     }else{
-      setLoading(false)
+      setLoading(false);
     }
 
   },[userInfo,setUserInfo])
