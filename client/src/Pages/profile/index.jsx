@@ -3,11 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { IoArrowBack } from "react-icons/io5";
 import { Avatar } from "@/components/ui/avatar";
 import { AvatarImage } from "@radix-ui/react-avatar";
-import { useState } from "react";
+import { useState ,memo, useEffect} from "react";
 import { colors, getColors } from "@/lib/utils";
 import {FaPlus,FaTrash} from "react-icons/fa"
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { apiclient } from "@/lib/api-client";
+import { UPDATE_PROFILE } from "@/utils/constants";
 
 const Profile = () => {
     const navigate = useNavigate();
@@ -18,15 +21,55 @@ const Profile = () => {
     const [hovered, setHovered] = useState(false)
     const [color, setColor] = useState(0)
 
-    const saveChanges = async ()=>{
+    useEffect(()=>{
+      if(userInfo.profilesetup)
+      {
+        setFirstname(userInfo.firstname)
+        setLastname(userInfo.lastname)
+        setColor(userInfo.color)
+      }
+    },[userInfo])
 
+    const validateProfile = () => {
+      if(!firstname)
+      {
+        toast.error("Firstname is required");
+        return false;
+      }
+      if(!lastname){
+        toast.error("Lastname is required");
+        return false;
+      }
+      return true;
+    }
+
+    const saveChanges = async ()=>{
+      if(validateProfile()){
+         try{
+          const response = await apiclient.post(UPDATE_PROFILE,{firstname,lastname,color:color},{withCredentials:true})
+          if(response.status===200 && response.data)  
+          {
+            setUserInfo({...response.data})
+            toast.success("Profile Updated successfully")
+            navigate("/chat")
+          }
+         }catch(err){
+          console.log({err})
+         }
+      }
+
+    }
+    const handleNavigate = ()=>{
+      if(userInfo.profilesetup){
+        navigate('/chat')
+      }
     }
 
   return (
     <div className="bg-[#1b1c24] h-[100vh] flex items-center justify-center flex-col gap-10 ">
       <div className="flex flex-col gap-10 w-[80vw] md:w-max">
         <div >
-          <IoArrowBack className="text-4xl lg:text-5xl text-white/90 cursor-pointer"></IoArrowBack>
+          <IoArrowBack className="text-4xl lg:text-5xl text-white/90 cursor-pointer" onClick={handleNavigate}></IoArrowBack>
         </div>
         <div className="grid grid-cols-2"> 
           <div className="h-full w-32 md:w-48 md:h-48 relative flex items-center justify-center "
@@ -51,7 +94,7 @@ const Profile = () => {
           </div>
           <div className="flex min-w-32 md:min-w-64 flex-col gap-5 text-white items-center justify-center">
              <div className="w-full ">
-              <Input placeholder="Email" type="email" disable value={userInfo.email} className="rounded-lg p-6 bg-[#2c2e3b] border-none"></Input>
+              <Input placeholder="Email" type="email" disabled value={userInfo.email} className="rounded-lg p-6 bg-[#2c2e3b] border-none"></Input>
              </div>
              <div className="w-full ">
               <Input placeholder="First Name" type="text"  value={firstname} onChange={e=>{
