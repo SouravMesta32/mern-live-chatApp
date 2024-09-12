@@ -10,7 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { apiclient } from "@/lib/api-client";
-import { UPDATE_PROFILE } from "@/utils/constants";
+import { ADD_PROFILE_IMAGE_ROUTE, HOST, REMOVE_PROFILE_IMAGE_ROUTE, UPDATE_PROFILE } from "@/utils/constants";
+import { useRef } from "react";
 
 const Profile = () => {
     const navigate = useNavigate();
@@ -20,6 +21,7 @@ const Profile = () => {
     const [image, setImage] = useState(null)
     const [hovered, setHovered] = useState(false)
     const [color, setColor] = useState(0)
+    const fileInputRef = useRef(null);
 
     useEffect(()=>{
       if(userInfo.profilesetup)
@@ -27,6 +29,9 @@ const Profile = () => {
         setFirstname(userInfo.firstname)
         setLastname(userInfo.lastname)
         setColor(userInfo.color)
+      }
+      if(userInfo.image){
+        setImage(`${HOST}/${userInfo.image}`)
       }
     },[userInfo])
 
@@ -63,6 +68,49 @@ const Profile = () => {
       if(userInfo.profilesetup){
         navigate('/chat')
       }
+      else{
+        toast.error("Setup your profile")
+      }
+    }
+
+    const handleFileInputClick = ()=>{
+      fileInputRef.current.click();
+    }
+
+    const handleImageChange = async (event)=>{
+      const file = event.target.files[0];
+      console.log(file);
+      if(file)
+      {
+        const formdata = new FormData();
+        formdata.append("profile-image",file);
+        const response = await apiclient.post(ADD_PROFILE_IMAGE_ROUTE,formdata,{withCredentials:true})
+        if(response.status === 200 && response.data.image){
+          setUserInfo({...userInfo,image:response.data.image});
+          toast.success("Image added successfully")
+        } 
+        // const reader = new FileReader();
+        // reader.onload = ()=>{
+        //   setImage(reader.result);
+        // }
+        // reader.readAsDataURL(file)
+      }
+    }
+    
+    const handleDeleteImage = async ()=>{
+
+      try {
+        const response = await apiclient.delete(REMOVE_PROFILE_IMAGE_ROUTE,{withCredentials:true})
+        if(response.status === 200 )
+        {
+          setUserInfo({...userInfo,image:null})
+          toast.success("Image removed successfully.")
+          setImage(null);
+        }
+      } catch (error) {
+        console.log({error});
+      }
+
     }
 
   return (
@@ -83,14 +131,14 @@ const Profile = () => {
             </Avatar>
             {
               hovered && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/50 ring-fuchsia-50 rounded-full" >
+                <div className="absolute inset-0 flex items-center justify-center bg-black/50 ring-fuchsia-50 rounded-full" onClick={image ? handleDeleteImage : handleFileInputClick} >
                   {
                     image ? <FaTrash className="text-white text-3xl cursor-pointer"/> : <FaPlus className="text-white text-3xl cursor-pointer "/>
                   }
                 </div>
               )
             }
-            {/* <input type="text"></input> */}
+            <input type="file" ref={fileInputRef} className="hidden" onChange={handleImageChange} name="prfile-image" accept=".jpg,.png,.jpeg,.svg,.webp"></input>
           </div>
           <div className="flex min-w-32 md:min-w-64 flex-col gap-5 text-white items-center justify-center">
              <div className="w-full ">

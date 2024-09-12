@@ -16,6 +16,7 @@ app.use(cors({
     credentials:true
 }))
 
+app.use("/uploads/profile",express.static("uploads/profile"))
 app.use(cookieParser());
 app.use(express.json());
 app.use("/api/auth",authRoutes)
