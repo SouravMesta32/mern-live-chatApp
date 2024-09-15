@@ -45,7 +45,7 @@ const Auth = () => {
             toast.error("Password is required");
             return false;
         }
-        if(!password==confirmpassword)
+        if(password!==confirmpassword)
         {
             toast.error("Password and confirm password should be same")
             return false;
@@ -55,6 +55,7 @@ const Auth = () => {
 
     const handlelogin = async ()=>{
         if(validatelogin()){
+            try{
             const response = await apiclient.post(LOGIN_ROUTES,{email,password},{withCredentials:true})
             if(response.data.user.id){
                 setUserInfo(response.data.user);
@@ -67,6 +68,17 @@ const Auth = () => {
                 }
             }
             console.log({response});
+            }
+            catch(err){
+                if(err.response && err.response.status === 401)
+                {
+                    toast.error("Invalid Credentials")
+                }else
+                {
+                    toast.error('Something went Wrong')
+                }
+            }
+
             
         }
     }

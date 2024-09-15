@@ -50,13 +50,13 @@ export const login = async (request,response,next)=>
 
         const user = await User.findOne({email});
         if(!user){
-            return response.status(400).send("User with the given email not found")
+            return response.status(401).send("Invalid Credentials")
         }
 
         const auth = await compare(password,user.password)
         if(!auth)
         {
-            return response.status(400).send("Wrong Password")
+            return response.status(401).send("Invalid Credentials")
         }
         response.cookie("jwt",createtoken(email,user.id),{
             maxAge,
@@ -194,6 +194,20 @@ export const removeProfileImage = async (request,response,next)=>
         await user.save();
 
         return response.status(200).send('Profile Image Removed Successfully.')
+ 
+    }catch(error){
+        console.log({error})
+        return response.status(500).send("Internal server Error")
+    }
+}
+
+export const logout = async (request,response,next)=>
+{
+    try{
+
+       response.clearCookie("jwt",{secure:true,sameSite:"None"})
+
+        return response.status(200).send('Logout successfull')
  
     }catch(error){
         console.log({error})
