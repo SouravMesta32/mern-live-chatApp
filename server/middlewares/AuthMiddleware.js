@@ -13,7 +13,6 @@ export const verifyToken = (request,response,next)=>{
             {
                 return  response.status(403).send("Token is not Valid");
             }
-            console.log(payload)
             request.userId = payload.usedId
             next();
         })

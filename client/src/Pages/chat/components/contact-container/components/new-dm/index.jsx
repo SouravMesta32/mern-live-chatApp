@@ -73,7 +73,7 @@ const NewDm = () => {
             <DialogHeader>
                 <DialogTitle>Please select a Contact</DialogTitle>
                 {/* <DialogDescription>
-                
+              
                 </DialogDescription> */}
             </DialogHeader>
             <div>
@@ -107,7 +107,7 @@ const NewDm = () => {
                 <Lottie
                 isClickToPauseDisabled={true} height={100} width={100} options={animationDefaultOptions}/>
                 <div className="text-opacity-80 text-white flex flex-col gap-5 items-center mt-6 lg:text-2xl text-xl transition-all duration-300 text-center">
-                  <h3 className="poppins-medium">
+                  <h3 className="poppins-medium mb-5">
                     Hi <span className="text-purple-500">!</span> Search new
                     <span className="text-purple-500"> contact</span> 
                   </h3>
