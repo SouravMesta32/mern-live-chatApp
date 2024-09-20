@@ -3,12 +3,12 @@ import mongoose from "mongoose";
 const messageSchema = new mongoose.Schema({
     sender:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"Users",
+        ref:"User",
         required:true
     },
     recipient:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"Users",
+        ref:"User",
         required:false
     },
     messageType:{
@@ -18,13 +18,13 @@ const messageSchema = new mongoose.Schema({
     },
     content:{
         type:String,
-        required:()=>{
+        required:function(){
             return this.messageType==='text'
         }
     },
     fileUrl:{
         type:String,
-        required:()=>{
+        required:function(){
             return this.messageType==='file'
         }
     },
