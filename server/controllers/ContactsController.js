@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+import Message from "../models/MessagesModel.js";
 import User from "../models/UserModel.js";
 
 export const searchContacts  = async (request,response,next)=>
@@ -20,6 +22,71 @@ export const searchContacts  = async (request,response,next)=>
             }
             ],})
             
+
+        return response.status(200).json({contacts})
+ 
+    }catch(error){
+        console.log({error})
+        return response.status(500).send("Internal server Error")
+    }
+}
+
+export const getContactsForDmList  = async (request,response,next)=>
+{
+    try{
+        // console.log(request.data)
+        
+         let {userId} = request
+         userId = new mongoose.Types.ObjectId(userId)
+
+         const contacts = await Message.aggregate([{
+            $match:{
+                $or:[{sender:userId},{recipient:userId}]
+            },
+         },
+         {
+            $sort:{timeStamp:-1}
+         },
+         {
+            $group:{
+                _id:{
+                    $cond:{
+                        if:{$eq:["$sender",userId]},
+                        then:"$recipient",
+                        else:"$sender"
+                    }
+                },
+                lastmessageTime:{$first:"$timeStamp"} 
+            },
+            
+         },
+         {
+            $lookup:{
+                from:"users",
+                localField:"_id",
+                foreignField:"_id",
+                as:"contactInfo"
+            }
+         },{
+            $unwind:"$contactInfo",
+         },{
+            $project:{
+                _id:1,
+                lastmessageTime:1,
+                email:"$contactInfo.email",
+                firstname:"$contactInfo.firstname",
+                lastname:"$contactInfo.lastname",
+                color:"$contactInfo.color",
+                image:"$contactInfo.image"
+            }
+
+         },{
+            $sort:{lastmessageTime:-1}
+         }
+        
+        ])
+
+        console.log(contacts)
 
         return response.status(200).json({contacts})
  
