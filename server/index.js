@@ -20,6 +20,7 @@ app.use(cors({
 }))
 
 app.use("/uploads/profile",express.static("uploads/profile"))
+app.use("/uploads/files",express.static("uploads/files"))
 app.use(cookieParser());
 app.use(express.json());
 app.use("/api/auth",authRoutes)
