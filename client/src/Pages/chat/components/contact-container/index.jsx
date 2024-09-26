@@ -3,6 +3,7 @@ import { apiclient } from "@/lib/api-client";
 import { useAppStore } from "@/store";
 import { CONTACT_ROUTES, GET_CONTACTS_ROUTE } from "@/utils/constants";
 import { useEffect } from "react";
+import CreateChannel from "./components/create-channel/index"
 import NewDm from "./components/new-dm";
 import ProfileInfo from "./components/profile-info/index.";
 
@@ -38,6 +39,7 @@ const ContactsContainer = () => {
       <div className="my-5">
         <div className="flex items-center justify-between pr-10">
           <Title text="Channels"/>
+          <CreateChannel/>
         </div>
       </div>
       <ProfileInfo/>
