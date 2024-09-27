@@ -95,3 +95,23 @@ export const getContactsForDmList  = async (request,response,next)=>
         return response.status(500).send("Internal server Error")
     }
 }
+
+export const getAllContacts  = async (request,response,next)=>
+{
+    try{
+        
+        const users = await User.find({_id:{$ne:request.userId}},"firstname lastname _id email")
+        
+        const contacts = users.map((users)=>({
+            label:users.firstname ? `${users.firstname} ${users.lastname}`: users.email,
+            value: users._id
+        }))
+       
+
+        return response.status(200).json({contacts})
+ 
+    }catch(error){
+        console.log({error})
+        return response.status(500).send("Internal server Error")
+    }
+}
