@@ -8,7 +8,7 @@ import NewDm from "./components/new-dm";
 import ProfileInfo from "./components/profile-info/index.";
 
 const ContactsContainer = () => {
-  const {setDirectMessageContacts , directMessagesContacts} = useAppStore()
+  const {setDirectMessageContacts , directMessagesContacts,channels} = useAppStore()
   useEffect(()=>{
     const getContacts = async () =>{
       const response = await apiclient.get(GET_CONTACTS_ROUTE,{withCredentials:true})
@@ -40,6 +40,9 @@ const ContactsContainer = () => {
         <div className="flex items-center justify-between pr-10">
           <Title text="Channels"/>
           <CreateChannel/>
+        </div>
+        <div className="max-h-[38vh] overflow-y-auto scrollbar ">
+          <ContactList contacts={channels} isChannel={true}/>
         </div>
       </div>
       <ProfileInfo/>
