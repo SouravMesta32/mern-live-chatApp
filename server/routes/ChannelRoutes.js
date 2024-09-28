@@ -1,8 +1,9 @@
 import {Router} from "express"
-import { createChannel } from "../controllers/ChannelControllers.js"
+import { createChannel, getUserChannel } from "../controllers/ChannelControllers.js"
 import { verifyToken } from "../middlewares/AuthMiddleware.js"
 const channelRoute = Router()
 
 channelRoute.post("/create-channel",verifyToken,createChannel)
+channelRoute.get("/get-user-channels",verifyToken,getUserChannel)
 
 export default channelRoute
