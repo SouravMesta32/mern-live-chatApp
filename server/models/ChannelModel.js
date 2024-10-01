@@ -19,7 +19,7 @@ const channelSchema = new mongoose.Schema({
     messages:[
         {
             type:mongoose.Schema.ObjectId,
-            ref:"messages",
+            ref:"Messages",
             required:false
         }
     ],

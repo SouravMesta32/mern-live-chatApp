@@ -72,3 +72,24 @@
   font-weight: 500;
   font-style: normal;
 }
+
+/* Custom scrollbar styles */
+.scrollbar-black::-webkit-scrollbar {
+  width: 12px;
+}
+
+.scrollbar-black::-webkit-scrollbar-track {
+  background: #312f2f; /* Lightly black track */
+}
+
+.scrollbar-black::-webkit-scrollbar-thumb {
+  background-color: #4a4a4a; /* Black scrollbar thumb */
+  border-radius: 10px; /* Rounded edges for the scrollbar thumb */
+  border: 3px solid #1f1e1e; /* Matches the track color */
+}
+
+/* Firefox-specific scrollbar settings */
+.scrollbar-black {
+  scrollbar-color: #1a1919 #2a2a2a; /* Thumb color and track color */
+  scrollbar-width: thin; /* Makes the scrollbar thinner */
+}

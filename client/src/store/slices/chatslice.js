@@ -40,5 +40,46 @@ export const createChatSlice = (set,get)=>({
                 }
             ]
         })
+    },
+    addChannelInChannelList: (message) => {
+        console.log(get().channels)
+
+        const channels = get().channels;
+        const data = channels.find((channel)=>channel._id === message.channelId)
+        console.log(data)
+        const index = channels.findIndex((channel)=>channel._id === message.channelId)
+        console.log(index)
+
+        if(index !== -1 && index !== undefined){
+
+            channels.splice(index,1)
+            channels.unshift(data)
+            // const updatedChannel = [...channels]
+            // updatedChannel.splice(index,1)
+            // updatedChannel.unshift(data)
+            // set({channels:updatedChannel})
+            // console.log("Updated channels:", updatedChannel); 
+        }
+    },
+     addContactsInDmContacts:(message)=>{
+        const userId = get().userInfo.id;
+        const fromId = message.sender._id === userId ? 
+            message.recipient._id : message.sender._id
+        const formData = message.sender._id === userId ? 
+            message.recipient : message.sender
+        const dmContacts = [...get().directMessagesContacts]
+        const data = dmContacts.find((contact)=> contact._id === fromId)
+        const index = dmContacts.findIndex((contact)=> contact._id === fromId)
+        console.log("Updating contacts for message:", message); // Debugging line
+        console.log("Current dmContacts:", dmContacts); // Debugging line
+        if(index !== -1 && index !== undefined){
+            dmContacts.splice(index,1)
+            dmContacts.unshift(data)
+        }else{
+            dmContacts.unshift(formData)
+        }
+
+        set({directMessagesContacts:dmContacts})
+
     }
 })

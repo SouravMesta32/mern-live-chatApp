@@ -40,7 +40,7 @@ const ContactsContainer = () => {
           <Title text="Direct Messages"/>
           <NewDm></NewDm>
         </div>
-        <div className="max-h-[38vh] overflow-y-auto scrollbar ">
+        <div className="max-h-[38vh] overflow-y-auto scrollbar scrollbar-black ">
           <ContactList contacts={directMessagesContacts}/>
         </div>
       </div>
@@ -49,11 +49,11 @@ const ContactsContainer = () => {
           <Title text="Channels"/>
           <CreateChannel/>
         </div>
-        <div className="max-h-[38vh] overflow-y-auto scrollbar ">
+        <div className="max-h-[38vh] overflow-y-auto scrollbar scrollbar-black ">
           <ContactList contacts={channels} isChannel={true}/>
         </div>
       </div>
-      <ProfileInfo/>
+      <ProfileInfo />
     </div>
   )
 }

@@ -17,7 +17,7 @@ import { apiclient } from "@/lib/api-client";
 
  
 const ProfileInfo = () => {
-    const {userInfo,setUserInfo}= useAppStore();
+    const {userInfo,setUserInfo,setSelectedChatType}= useAppStore();
     const navigate = useNavigate();
     console.log(userInfo.email)
 
@@ -26,6 +26,7 @@ const logout = async ()=>{
         const response = await  apiclient.post(LOGOUT_ROUTE,{},{withCredentials:true})
         if(response.status === 200)
         {
+            setSelectedChatType(undefined)
             setUserInfo(null)
             navigate("/auth")
            
@@ -42,7 +43,7 @@ const logout = async ()=>{
             <div className="w-12 h-12 relative">
             <Avatar className="h-12 w-12 rounded-full overflow-hidden">{
               userInfo.image ? (<AvatarImage src={`${HOST}/${userInfo.image}`} alt='profile' className="object-cover w-full h-full bg-black"/>) : (
-              <div className={`uppercase h-12 w-12 md:w-48 md:h-48 text-lg border-[1px] flex items-center justify-center rounded-full ${getColors(userInfo.color)}`}>
+              <div className={`uppercase h-12 w-12 text-lg border-[1px] flex items-center justify-center rounded-full ${getColors(userInfo.color)}`}>
               {userInfo.firstname ? userInfo.firstname.split("").shift() : userInfo.email.split("").shift()}
               </div>)
             }

@@ -1,6 +1,6 @@
 import { apiclient } from "@/lib/api-client";
 import { useAppStore } from "@/store"
-import { GET_ALL_MESSAGES_ROUTE, HOST } from "@/utils/constants";
+import { GET_ALL_MESSAGES_ROUTE, GET_CHANNEl_MESSAGES, HOST } from "@/utils/constants";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useRef } from "react"
@@ -12,27 +12,48 @@ import { getColors } from "@/lib/utils";
 
 
 const MessageContainer = () => {
-  const ScrollRef = useRef();
+  const ScrollRef = useRef(null);
   const {SelectedChatData,SelectedChatType,userInfo,SelectedChatMessages,setSelectedChatMessages,setFileDownloadProgress,setIsDownloading} = useAppStore();
   const [showImage, setShowImage] = useState(false)
   const [imageUrl, setImageUrl] = useState(null)
+  const [loadingMessages, setLoadingMessages] = useState(false)
 
 
   useEffect(()=>{
 
     const getMessages = async ()=>{
       try {
+        setLoadingMessages(true)
         const response = await apiclient.post(GET_ALL_MESSAGES_ROUTE,{id:SelectedChatData._id},{withCredentials:true})
         if(response.data.messages){
           setSelectedChatMessages(response.data.messages)
         }
       } catch (error) {
         console.log({error})
+      } finally{
+        setLoadingMessages(false)
       }
     }
+
+    const getChannelMessages = async ()=>{
+      try {
+        setLoadingMessages(true)
+        const response = await apiclient.get(`${GET_CHANNEl_MESSAGES}/${SelectedChatData._id}`,{withCredentials:true})
+        if(response.data.messages){
+          setSelectedChatMessages(response.data.messages)
+        }
+      } catch (error) {
+        console.log({error})
+      } finally {
+        setLoadingMessages(false)
+      }
+    }
+
     if(SelectedChatData._id){
       if(SelectedChatType === "contact"){
         getMessages()
+      }else if(SelectedChatType === "channel"){
+        getChannelMessages();
       }
     }
 
@@ -40,14 +61,24 @@ const MessageContainer = () => {
   },[SelectedChatData,SelectedChatType,setSelectedChatMessages])
 
   useEffect(()=>{
-    if(ScrollRef.current){
-      ScrollRef.current.scrollIntoView({behaviour:"smooth"})
-    }
-  },[SelectedChatMessages])
+
+    const ScrollToBottom = ()=>
+    {if(ScrollRef.current){
+      ScrollRef.current.scrollIntoView({block:"end"})
+    }}
+    // if (ScrollRef.current) {
+    //   ScrollRef.current.scrollTop = ScrollRef.current.scrollHeight; // Scroll to bottom directly
+    // }
+    setTimeout(ScrollToBottom,100)
+    
+  },[SelectedChatMessages,SelectedChatData])
 
   
 
   const renderMessages = ()=>{
+    if(loadingMessages){
+      return <div className="text-center text-gray-500 my-2">Loading messages...</div>; 
+    }
     let lastDate = null;
     return SelectedChatMessages.map((message,index)=>{
       const messageDate = moment(message.timeStamp).format("YYYY-MM-DD");
@@ -103,6 +134,31 @@ const MessageContainer = () => {
         )
       }
       {
+        message.messageType === "file" &&  (
+          <div className={`${message.sender._id === userInfo.id ? "bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50" : "bg-[#2a2b33]/5 text-white/80 border-[#ffffff]/20"} border inline-block p-4 rounded my-1 max-w-[50%] break-words`}>
+            {message.fileUrl && (checkIfImage(message.fileUrl) ? <div className="cursor-pointer " onClick={()=>{
+              setShowImage(true);
+              setImageUrl(message.fileUrl)}}>
+              {
+                <img src={`${HOST}/${message.fileUrl}`} width={300}/>
+              }
+            </div> : 
+            
+            <div className="flex items-center justify-center gap-5">
+              <span className="text-white/8 text-3xl bg-black/20 rounded-full p-3">
+                <MdFolderZip></MdFolderZip>
+              </span>  
+              <span>
+                {message.fileUrl.split('/').pop()}
+              </span>
+              <span className="bg-black/20 p-3 text-2xl rounded-full hover:bg-black/50 cursor-pointer transition-all duration-300" onClick={()=>downloadFile(message.fileUrl)}>
+                <IoMdArrowRoundDown></IoMdArrowRoundDown>
+              </span>
+            </div>)}
+          </div>
+        )
+      }
+      {
         message.sender._id !== userInfo.id ? <div className="flex items-center justify-start gap-3">
            <Avatar className="h-8 w-8 rounded-full overflow-hidden">{
                     message.sender.image && (<AvatarImage 
@@ -112,11 +168,7 @@ const MessageContainer = () => {
                       )} 
                       
                     <AvatarFallback className={`uppercase h-8 w-8  text-lg flex items-center justify-center   rounded-full ${getColors(message.sender.color)}`}>
-                        {
-                         message.sender.firstname 
-                         ? message.sender.firstname.split("").shift() 
-                         : message.sender.email.split("").shift()
-                        }
+                      {message.sender?.firstname?.[0] || message.sender?.email?.[0]}  
                     </AvatarFallback>
                   </Avatar>
                   <span className="text-sm text-white/60">
@@ -186,9 +238,9 @@ const MessageContainer = () => {
   )
 
   return (
-    <div className="flex-1 overflow-y-auto scrollbar-hidden p-4 px-8 md:w-[65vw] lg:w-[70vw] xl:w-[80vw] w-full ">
+    <div  ref={ScrollRef} className="flex-1 overflow-y-auto scrollbar-hidden scrollbar-black p-4 px-8 md:w-[65vw] lg:w-[70vw] xl:w-[80vw] w-full ">
       {renderMessages()}
-      <div ref={ScrollRef}></div>
+      <div ref={ScrollRef} ></div>
       {
         showImage && <div className="fixed z-[1000] top-0 left-0 h-[100vh] w-[100vw] flex items-center justify-center backdrop-blur-lg flex-col">
           <div >
