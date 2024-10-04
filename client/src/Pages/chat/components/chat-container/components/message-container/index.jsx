@@ -62,13 +62,11 @@ const MessageContainer = () => {
 
   useEffect(()=>{
 
-    const ScrollToBottom = ()=>
-    {if(ScrollRef.current){
-      ScrollRef.current.scrollIntoView({block:"end"})
+    const ScrollToBottom = ()=>{
+      if(ScrollRef.current){
+      ScrollRef.current.scrollIntoView({behavior:"smooth",block:"end"})
     }}
-    // if (ScrollRef.current) {
-    //   ScrollRef.current.scrollTop = ScrollRef.current.scrollHeight; // Scroll to bottom directly
-    // }
+    
     setTimeout(ScrollToBottom,100)
     
   },[SelectedChatMessages,SelectedChatData])
@@ -238,7 +236,7 @@ const MessageContainer = () => {
   )
 
   return (
-    <div  ref={ScrollRef} className="flex-1 overflow-y-auto scrollbar-hidden scrollbar-black p-4 px-8 md:w-[65vw] lg:w-[70vw] xl:w-[80vw] w-full ">
+    <div className="flex-1 overflow-y-auto scrollbar-hidden scrollbar-black p-4 px-8 md:w-[65vw] lg:w-[70vw] xl:w-[80vw] w-full ">
       {renderMessages()}
       <div ref={ScrollRef} ></div>
       {

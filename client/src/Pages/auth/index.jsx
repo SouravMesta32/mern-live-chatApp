@@ -9,6 +9,7 @@ import { apiclient } from "@/lib/api-client"
 import { LOGIN_ROUTES, SIGNUP_ROUTES } from "@/utils/constants"
 import { useNavigate } from "react-router-dom"
 import { useAppStore } from "@/store"
+import {z} from "zod"
 
 
 
@@ -20,6 +21,21 @@ const Auth = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [confirmpassword, setConfirmPassword] = useState("")
+
+
+    const loginSchema = z.object({
+        email: z.string().email("Please enter the valid Email"),
+        password: z.string().min(1,"password is required")
+    })
+
+    const signUpSchema = z.object({
+        email: z.string().email("Please enter the valid Email"),
+        password: z.string().min(1,"password is required"),
+        confirmpassword: z.string().min(1,"confirm password is required")
+    }).refine(data => data.password === data.confirmpassword,{
+        message:"Password and confirm password should be same",
+        path:["confirmpassword"]
+    })
 
     const validatelogin = ()=>{
         if(!email.length)
@@ -54,7 +70,11 @@ const Auth = () => {
     }
 
     const handlelogin = async ()=>{
-        if(validatelogin()){
+        const result = loginSchema.safeParse({email,password})
+        if(!result.success){
+            result.error.errors.forEach(err=>toast.error(err.message))
+            return
+        }
             try{
             const response = await apiclient.post(LOGIN_ROUTES,{email,password},{withCredentials:true})
             if(response.data.user.id){
@@ -80,12 +100,15 @@ const Auth = () => {
             }
 
             
-        }
+        
     }
 
     const handlesignup = async ()=>{
-        if(validatesignup())
-        {
+        const result = signUpSchema.safeParse({email,password,confirmpassword})
+        if(!result.success){
+            result.error.errors.forEach(err => toast.error(err.message))
+            return;
+        }
             const response = await apiclient.post(SIGNUP_ROUTES,{email,password},{withCredentials:true});
             if(response.status===201)
             {
@@ -93,7 +116,7 @@ const Auth = () => {
                 navigate('/profile')
             }
             console.log({response});
-        }
+        
 
 
     }
