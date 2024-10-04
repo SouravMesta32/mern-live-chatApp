@@ -18,7 +18,7 @@ app.use(cors({
     origin:['https://live-chat-syncronous.vercel.app',
         'https://live-chat-syncronous-qcq9gi5n7-sourav-mestas-projects.vercel.app', 
         'http://localhost:5173'],
-    methods:['GET','POST','PUT','PATCH','DELETE'],
+    methods:['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
     credentials:true
 }))
 
