@@ -8,16 +8,16 @@ export const ADD_PROFILE_IMAGE_ROUTE =  `${AUTH_ROUTES}/add-profile-image`
 export const REMOVE_PROFILE_IMAGE_ROUTE =  `${AUTH_ROUTES}/remove-profile-image`
 export const LOGOUT_ROUTE = `${AUTH_ROUTES}/logout`
 
-export const CONTACT_ROUTES = "api/contacts"
+export const CONTACT_ROUTES = `${HOST}/api/contacts`
 export const SEARCH_ROUTE = `${CONTACT_ROUTES}/search`
 export const GET_CONTACTS_ROUTE = `${CONTACT_ROUTES}/get-contact-for-dm`
 export const GET_ALL_CONTACTS_ROUTE = `${CONTACT_ROUTES}/get-all-contacts`
 
-export const MESSAGE_ROUTES = "api/messages"
+export const MESSAGE_ROUTES = `${HOST}/api/messages`
 export const GET_ALL_MESSAGES_ROUTE = `${MESSAGE_ROUTES}/get-messages`
 export const UPLOAD_FILES_ROUTE = `${MESSAGE_ROUTES}/upload-file`
 
-export const CHANNEL_ROUTE = "api/channel"
+export const CHANNEL_ROUTE = `${HOST}/api/channel`
 export const CREATE_CHANNEL_ROUTE = `${CHANNEL_ROUTE}/create-channel`
 export const GET_USER_CHANNELS_ROUTE = `${CHANNEL_ROUTE}/get-user-channels`
 export const GET_CHANNEl_MESSAGES = `${CHANNEL_ROUTE}/get-channel-messages`
