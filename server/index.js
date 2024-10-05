@@ -15,7 +15,7 @@ const app = express();
 const port = process.env.PORT;
 const databaseURL = process.env.DATABASE_URL;
 app.use(cors({
-    origin:['https://live-chat-syncronous.vercel.app',
+    origin:['https://mern-live-chat-syncronous.vercel.app',
         'http://localhost:5173'],
     methods:['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
     credentials:true
