@@ -114,7 +114,7 @@ const MessageBar = () => {
         <div className="flex-1 flex bg-[#2a2b33] rounded-md items-center gap-5 pr-5">
             <input 
                 type="text" 
-                className="flex-1 p-5 bg-transparent rounded-md focus:border-none focus:outline-none" placeholder="Enter the Message"
+                className="flex-1 p-5 bg-transparent rounded-md focus:border-none focus:outline-none w-full" placeholder="Enter the Message"
                 value={message} 
                 onChange={(e)=>{setMessage(e.target.value)}}
                 onKeyDown={handleKeyPress}
