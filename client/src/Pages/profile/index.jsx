@@ -31,7 +31,7 @@ const Profile = () => {
         setColor(userInfo.color)
       }
       if(userInfo.image){
-        setImage(`${HOST}/${userInfo.image}`)
+        setImage(userInfo.image)
       }
     },[userInfo])
 
@@ -84,7 +84,10 @@ const Profile = () => {
       {
         const formdata = new FormData();
         formdata.append("profile-image",file);
+        formdata.append("upload_preset","profile_image_uploads")
         const response = await apiclient.post(ADD_PROFILE_IMAGE_ROUTE,formdata,{withCredentials:true})
+        console.log("Uploaded image URL:", response.data.image);
+
         if(response.status === 200 && response.data.image){
           setUserInfo({...userInfo,image:response.data.image});
           toast.success("Image added successfully")
@@ -112,6 +115,7 @@ const Profile = () => {
       }
 
     }
+    console.log(userInfo.image)
 
   return (
     <div className="bg-[#1b1c24] h-[100vh] flex items-center justify-center flex-col gap-10 ">

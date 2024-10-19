@@ -93,3 +93,12 @@
   scrollbar-color: #1a1919 #2a2a2a; /* Thumb color and track color */
   scrollbar-width: thin; /* Makes the scrollbar thinner */
 }
+
+@media (max-width: 600px) {
+  .emoji-picker-container {
+    bottom: 0;   /* Position it fully visible at the bottom */
+    right: 0;    /* Align it to the right */
+    left: 0;     /* Ensure it spans the full width on mobile */
+    width: 100vw; /* Full width */
+  }
+}

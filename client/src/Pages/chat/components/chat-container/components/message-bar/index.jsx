@@ -67,10 +67,15 @@ const MessageBar = () => {
             {
                 const formData = new FormData();
                 formData.append("file",file)
+                formData.append("upload_preset", "file_upload")
                 setIsUploading(true)
                 const response = await apiclient.post(UPLOAD_FILES_ROUTE,formData,{withCredentials:true,
-                onUploadProgress:data=>setFileUploadProgress(Math.round((100*data.loaded)/data.total))
+                    onUploadProgress:(ProgressEvent)=>{
+                        const {loaded,total} = ProgressEvent;
+                        const percentCompleted = Math.round((loaded*100)/total);
+                        setFileUploadProgress(percentCompleted)}
                 })
+                console.log("Response from upload:", response);
 
                 if(response.status === 200 && response.data)
                 {
@@ -98,8 +103,11 @@ const MessageBar = () => {
             }
             console.log(file);
          } catch (error) {
-            setIsUploading(false)
             console.log({error})
+         }finally{
+            setIsUploading(false)
+            setFileUploadProgress(0)
+            console.log("Uploading finished. Resetting state.");
          }
     }
 
@@ -127,12 +135,14 @@ const MessageBar = () => {
             <button className="text-neutral-500 focus:border-none focus:outline-none focus:text-white duration-300 transition-all" onClick={()=>setEmojiPicker(true)}>
                 <RiEmojiStickerLine className="text-2xl"/>
             </button>
-            <div className="absolute bottom-2 right-0"  ref={emojiRef}>
+            <div className="absolute bottom-10 right-0 max-w-[70vw] max-h-[450px] overflow-hidden sm:max-w-[400px] sm:max-h-[400px]"  ref={emojiRef}>
                 <EmojiPicker
                 theme="dark"
                 open={emojiPicker}
                 onEmojiClick={handleAddEmoji}
-                autoFocusSearch={false}/>
+                autoFocusSearch={false}
+                
+                />
             </div>
             </div>
         </div>

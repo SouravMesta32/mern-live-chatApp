@@ -96,9 +96,11 @@ const MessageContainer = () => {
   }
 
   const downloadFile = async (url) =>{
+    try{
     setIsDownloading(true)
     setFileDownloadProgress(0)
-    const response = await apiclient.get(`${HOST}/${url}`,{responseType:"blob",onDownloadProgress:(ProgressEvent)=>{
+    const response = await apiclient.get(url,{responseType:"blob",
+    onDownloadProgress:(ProgressEvent)=>{
       const {loaded,total} = ProgressEvent;
       const percentCompleted = Math.round((loaded*100)/total);
       setFileDownloadProgress(percentCompleted)}
@@ -106,13 +108,16 @@ const MessageContainer = () => {
     const urlBlob = window.URL.createObjectURL(new Blob([response.data]));
     const link = document.createElement("a");
     link.href = urlBlob;
-    link.setAttribute("download",url.split("/").pop())
+    link.setAttribute("download",url.split("/").pop()|| 'download')
     document.body.appendChild(link);
     link.click();
     link.remove();
     window.URL.revokeObjectURL(urlBlob)
     setIsDownloading(false)
     setFileDownloadProgress(0)
+    }catch(err){
+      console.log({err})
+    }
 
   }
 
@@ -138,7 +143,7 @@ const MessageContainer = () => {
               setShowImage(true);
               setImageUrl(message.fileUrl)}}>
               {
-                <img src={`${HOST}/${message.fileUrl}`} width={300}/>
+                <img src={message.fileUrl} width={300}/>
               }
             </div> : 
             
@@ -160,7 +165,7 @@ const MessageContainer = () => {
         message.sender._id !== userInfo.id ? <div className="flex items-center justify-start gap-3">
            <Avatar className="h-8 w-8 rounded-full overflow-hidden">{
                     message.sender.image && (<AvatarImage 
-                      src={`${HOST}/${message.sender.image}`} 
+                      src={message.sender.image} 
                       alt='profile' 
                       className="object-cover w-full h-full bg-black"/>
                       )} 
@@ -199,7 +204,7 @@ const MessageContainer = () => {
     <div className={`${message.sender === SelectedChatData._id ? "text-left" : "text-right"}`}>
       {
         message.messageType === "text" && (
-          <div className={`${message.sender !== SelectedChatData._id ? "bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50" : "bg-[#2a2b33]/5 text-white/80 border-[#ffffff]/20"} border inline-block p-4 rounded my-1 max-w-[50%] break-words`}>
+          <div className={`${message.sender !== SelectedChatData._id ? "bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50" : "bg-[#2a2b33]/5 text-white/80 border-[#ffffff]/20"} border inline-block p-2 py-1 my-1 max-w-[50%] break-words rounded-xl`}>
             {message.content}
           </div>
         )
@@ -211,18 +216,20 @@ const MessageContainer = () => {
               setShowImage(true);
               setImageUrl(message.fileUrl)}}>
               {
-                <img src={`${HOST}/${message.fileUrl}`} width={300}/>
+                <img src={message.fileUrl} width={300}/>
               }
             </div> : 
             
-            <div className="flex items-center justify-center gap-5">
-              <span className="text-white/8 text-3xl bg-black/20 rounded-full p-3">
+            <div className="flex items-center justify-center gap-5 overflow-hidden w-full">
+              <span className="text-white/8 text-xs sm:text-3xl bg-black/20 rounded-full p-3">
                 <MdFolderZip></MdFolderZip>
               </span>  
-              <span>
-                {message.fileUrl.split('/').pop()}
+              <span className="flex-1 min-w-0">
+                <span className="block text-ellipsis text-xs sm:text-md overflow-hidden whitespace-nowrap" title={message.fileUrl.split('/').pop()}>
+                  {decodeURIComponent(message.fileUrl.split('/').pop())}
+                </span>
               </span>
-              <span className="bg-black/20 p-3 text-2xl rounded-full hover:bg-black/50 cursor-pointer transition-all duration-300" onClick={()=>downloadFile(message.fileUrl)}>
+              <span className="bg-black/20 p-3 text-xs sm:text-3xl rounded-full hover:bg-black/50 cursor-pointer transition-all duration-300" onClick={()=>downloadFile(message.fileUrl)}>
                 <IoMdArrowRoundDown></IoMdArrowRoundDown>
               </span>
             </div>}
@@ -242,7 +249,7 @@ const MessageContainer = () => {
       {
         showImage && <div className="fixed z-[1000] top-0 left-0 h-[100vh] w-[100vw] flex items-center justify-center backdrop-blur-lg flex-col">
           <div >
-            <img src={`${HOST}/${imageUrl}`} className="h-[80vh] w-full bg-cover"/>
+            <img src={imageUrl} className="h-[80vh] w-full bg-cover"/>
           </div>
           <div className="flex gap-5 fixed top-0 mt-5">
             <button className="bg-black/20 p-3 text-2xl rounded-full hover:bg-black/50 cursor-pointer transition-all duration-300" onClick={()=>downloadFile(imageUrl)}>

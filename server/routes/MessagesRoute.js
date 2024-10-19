@@ -5,7 +5,7 @@ import multer from "multer"
 
 const messagesRoutes = Router();
 const upload = multer({
-    dest: "/tmp/uploads/files"
+    storage:multer.memoryStorage(),
 })
 messagesRoutes.post("/get-messages",verifyToken, getMessages );
 messagesRoutes.post("/upload-file",verifyToken,upload.single("file"),uploadFiles)

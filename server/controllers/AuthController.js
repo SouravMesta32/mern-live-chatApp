@@ -2,6 +2,7 @@ import User from "../models/UserModel.js";
 import jwt  from "jsonwebtoken"
 import { compare } from "bcrypt";
 import {renameSync,unlinkSync} from "fs"
+import cloudinary from "../couldinaryconfig.js";
 
 
 const maxAge = 3 * 24 * 60 * 60 * 1000;
@@ -151,19 +152,21 @@ export const addProfileImage = async (request,response,next)=>
        if(!request.file){
         return response.status(400).send("file is required")
        }
-       const date = Date.now();
-       let fileName = "uploads/profile/" + date + request.file.originalname;
-       renameSync(request.file.path,fileName)
+    //    const date = Date.now();
+    //    let fileName = "uploads/profile/" + date + request.file.originalname;
+    //    renameSync(request.file.path,fileName)
 
-       const updateuser = await User.findByIdAndUpdate(request.userId,{image:fileName},{new:true,runValidators:true})
+       const result = await cloudinary.v2.uploader.upload(request.file.path,{
+        folder:"profile-images",
+        public_id:`profile_${request.userId}`
+       })
+
+       const updateuser = await User.findByIdAndUpdate(request.userId,{image:result.secure_url},{new:true,runValidators:true})
 
 
 
         return response.status(200).json({
-            
-               
-                image:updateuser.image,
-                
+                image:updateuser.image,  
         })
  
     }catch(error){
@@ -186,7 +189,8 @@ export const removeProfileImage = async (request,response,next)=>
 
         if(user.image)
         {
-            unlinkSync(user.image)
+            const publicId = user.image.split('/').pop().split('.')[0]
+            await cloudinary.v2.uploader.destroy(publicId,{resource_type:'image'})
         }
 
         user.image=null;
