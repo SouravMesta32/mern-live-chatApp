@@ -118,7 +118,7 @@ const MessageBar = () => {
     };
 
   return (
-    <div className="h-[10vh] bg-[#1c1d25] flex justify-center items-center px-4 sm:px-2 mb-2 gap-4 sm:gap-2  ">
+    <div className="h-[10vh] bg-[#0b0b0b] flex justify-center items-center px-4 sm:px-2 mb-2 gap-4 sm:gap-2  ">
         <div className="flex-1 flex bg-[#2a2b33] rounded-md items-center gap-5 pr-5">
             <input 
                 type="text" 
@@ -135,15 +135,15 @@ const MessageBar = () => {
             <button className="text-neutral-500 focus:border-none focus:outline-none focus:text-white duration-300 transition-all" onClick={()=>setEmojiPicker(true)}>
                 <RiEmojiStickerLine className="text-2xl"/>
             </button>
-            <div className="absolute bottom-10 right-0 max-w-[70vw] max-h-[450px] overflow-hidden sm:max-w-[400px] sm:max-h-[400px]"  ref={emojiRef}>
+            <div className="absolute bottom-10 right-0   sm:transform  max-w-[67vw]  max-h-[450px]  " ref={emojiRef}>
                 <EmojiPicker
-                theme="dark"
-                open={emojiPicker}
-                onEmojiClick={handleAddEmoji}
-                autoFocusSearch={false}
-                
+                    theme="dark"
+                    open={emojiPicker}
+                    onEmojiClick={handleAddEmoji}
+                    autoFocusSearch={false}
                 />
             </div>
+
             </div>
         </div>
         <button className="bg-[#8417ff] rounded-md flex items-center justify-center p-5 hover:bg-[#741bda] focus:bg-[#741bda] focus:border-none focus:outline-none focus:text-white duration-300 transition-all"

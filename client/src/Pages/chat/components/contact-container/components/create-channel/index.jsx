@@ -30,6 +30,7 @@ const CreateChannel = () => {
     const [allContacts, setAllContacts] = useState([])
     const [selectedContacts, setSelectedContacts] = useState([])
     const [channelName, setChannelName] = useState("")
+    const [inputValue , setInputValue] = useState("")
 
 
     useEffect(()=>{
@@ -66,6 +67,13 @@ const CreateChannel = () => {
         console.log({error})
       }
     }
+
+    const handleSearch = async (query) => {
+      return allContacts.filter((contact) =>
+        contact.label.toLowerCase().includes(query.toLowerCase())
+      );
+    };
+
   return (
     <>
     <TooltipProvider>
@@ -92,11 +100,12 @@ const CreateChannel = () => {
             </div> 
             <div>
               <MultipleSelector className="rounded-lg bg-[#2c2e3b] border-none py-2 text-white"
-              defaultOptions={allContacts} placeholder="Search contacts"
-              value={selectedContacts}
-              onChange={setSelectedContacts}
-              emptyIndicator={
-                <p className="text-center text-lg leading-10 text-gray-600">No results found.</p>
+                defaultOptions={allContacts} placeholder="Search contacts"
+                value={selectedContacts}
+                onSearch={handleSearch}
+                onChange={setSelectedContacts}
+                emptyIndicator={ 
+                  <p className="text-center text-lg leading-10 text-gray-600">No results found.</p>
               }/>
             </div>
             <div>

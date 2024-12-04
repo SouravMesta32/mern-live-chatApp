@@ -5,7 +5,7 @@ import MessageContainer from './components/message-container'
 
 const ChatContainer = () => {
   return (
-    <div className="fixed inset-0 flex flex-col bg-[#1c1d25] md:static md:flex-1 overflow-hidden">
+    <div className="fixed inset-0 flex flex-col bg-[#0b0b0b] md:static md:flex-1 overflow-hidden">
       <ChatHeader />
       <div className="flex-1 overflow-y-auto overflow-x-hidden">
         <MessageContainer />

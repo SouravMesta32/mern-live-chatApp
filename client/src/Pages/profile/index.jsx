@@ -118,7 +118,7 @@ const Profile = () => {
     console.log(userInfo.image)
 
   return (
-    <div className="bg-[#1b1c24] h-[100vh] flex items-center justify-center flex-col gap-10 ">
+    <div className="bg-[#0b0b0b] h-[100vh] flex items-center justify-center flex-col gap-10 ">
       <div className="flex flex-col gap-10 w-[80vw] md:w-max">
         <div >
           <IoArrowBack className="text-4xl lg:text-5xl text-white/90 cursor-pointer" onClick={handleNavigate}></IoArrowBack>

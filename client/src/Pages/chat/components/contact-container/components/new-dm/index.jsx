@@ -77,12 +77,12 @@ const NewDm = () => {
                 </DialogDescription> */}
             </DialogHeader>
             <div>
-                <Input placeholder="Search contact" className="rounded-lg p-6 bg-[#2c2e3b] border-none" onChange={e=>SearchContacts(e.target.value)}/>
+                <Input placeholder="Search contact" className="rounded-lg p-6 bg-[#0b0b0b] border-none" onChange={e=>SearchContacts(e.target.value)}/>
             </div>
             <ScrollArea className="h-[250-px]">
               <div className="flex flex-col gap-5 ">
                 {
-                  searchedContacts.map(contact=><div key={contact._id} className="flex gap-3 items-center cursor-pointer" onClick={()=>selectNewContact(contact)}>
+                  searchedContacts.map(contact=><div key={contact._id} className="flex gap-3 items-center cursor-pointer " onClick={()=>selectNewContact(contact)}>
                     <div className="w-12 h-12 relative">
                       <Avatar className="h-12 w-12 rounded-full overflow-hidden">{
                           contact.image ? (<AvatarImage src={contact.image} alt='profile' className="object-cover w-full h-full bg-black rounded-full"/>) : (

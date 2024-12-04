@@ -131,7 +131,7 @@ const MessageContainer = () => {
     return (<div className={`mt-5 ${message.sender._id !== userInfo.id ? "text-left" : "text-right" } `}>
       {
         message.messageType === "text" && (
-          <div className={`${message.sender._id === userInfo.id ? "bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50" : "bg-[#2a2b33]/5 text-white/80 border-[#ffffff]/20"} border inline-block p-4 rounded my-1 max-w-[50%] break-words ml-9`}>
+          <div className={`${message.sender._id === userInfo.id ? "bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50" : "bg-[#2a2b33]/5 text-white/80 border-[#ffffff]/20"} border inline-block p-4 rounded my-1 max-w-[50%] break-words ml-9 text-left`}>
             {message.content}
           </div>
         )
@@ -201,10 +201,10 @@ const MessageContainer = () => {
   }
 
   const renderDmMessage = (message)=> (
-    <div className={`${message.sender === SelectedChatData._id ? "text-left" : "text-right"}`}>
+    <div className={`${message.sender === SelectedChatData._id ? "text-right" : "text-right"}`}>
       {
         message.messageType === "text" && (
-          <div className={`${message.sender !== SelectedChatData._id ? "bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50" : "bg-[#2a2b33]/5 text-white/80 border-[#ffffff]/20"} border inline-block p-2 py-1 my-1 max-w-[50%] break-words rounded-xl`}>
+          <div className={`${message.sender !== SelectedChatData._id ?  "bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50" : "bg-[#2a2b33]/5 text-white/80 border-[#ffffff]/20"} border inline-block p-2 py-1 my-1 max-w-[50%] break-words rounded-xl text-left`}>
             {message.content}
           </div>
         )
@@ -225,7 +225,7 @@ const MessageContainer = () => {
                 <MdFolderZip></MdFolderZip>
               </span>  
               <span className="flex-1 min-w-0">
-                <span className="block text-ellipsis text-xs sm:text-md overflow-hidden whitespace-nowrap" title={message.fileUrl.split('/').pop()}>
+                <span className="block text-ellipsis text-xs sm:text-md overflow-hidden whitespace-nowrap break-words" title={message.fileUrl.split('/').pop()}>
                   {decodeURIComponent(message.fileUrl.split('/').pop())}
                 </span>
               </span>

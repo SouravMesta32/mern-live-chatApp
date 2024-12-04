@@ -120,9 +120,11 @@ const MultipleSelector = React.forwardRef(
 
     useEffect(() => {
       /** If `onSearch` is provided, do not trigger options updated. */
+      
       if (!arrayOptions || onSearch) {
         return;
       }
+      
       const newOption = transToGroupOption(arrayOptions || [], groupBy);
       if (JSON.stringify(newOption) !== JSON.stringify(options)) {
         setOptions(newOption);
@@ -131,6 +133,7 @@ const MultipleSelector = React.forwardRef(
 
     useEffect(() => {
       const doSearch = async () => {
+        
         setIsLoading(true);
         const res = await onSearch?.(debouncedSearchTerm);
         setOptions(transToGroupOption(res || [], groupBy));
@@ -140,9 +143,9 @@ const MultipleSelector = React.forwardRef(
       const exec = async () => {
         if (!onSearch || !open) return;
 
-        if (triggerSearchOnFocus) {
-          await doSearch();
-        }
+        // if (triggerSearchOnFocus) {
+        //   await doSearch();
+        // }
 
         if (debouncedSearchTerm) {
           await doSearch();
@@ -151,7 +154,7 @@ const MultipleSelector = React.forwardRef(
 
       void exec();
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [debouncedSearchTerm, groupBy, open, triggerSearchOnFocus]);
+    }, [debouncedSearchTerm, groupBy, triggerSearchOnFocus]);
 
     const CreatableItem = () => {
       if (!creatable) return undefined;
@@ -203,14 +206,14 @@ const MultipleSelector = React.forwardRef(
 
       // For async search that showing emptyIndicator
       if (onSearch && !creatable && Object.keys(options).length === 0) {
-        return (
+        return (open &&
           <CommandItem value="-" disabled>
             {emptyIndicator}
           </CommandItem>
         );
       }
 
-      return <CommandEmpty>{emptyIndicator}</CommandEmpty>;
+      return open &&<CommandEmpty>{emptyIndicator}</CommandEmpty>;
     }, [creatable, emptyIndicator, onSearch, options]);
 
     const selectables = React.useMemo(
@@ -307,7 +310,13 @@ const MultipleSelector = React.forwardRef(
               value={inputValue}
               disabled={disabled}
               onValueChange={(value) => {
+                if (value === undefined || value === null) value = "";
+
                 setInputValue(value);
+                console.log('value :' + value)
+                if (value.trim().length > 0 && !open) {
+                  setOpen(true);
+                }else if(value.trim().length === 0 && open)
                 inputProps?.onValueChange?.(value);
               }}
               onBlur={(event) => {
@@ -317,7 +326,9 @@ const MultipleSelector = React.forwardRef(
                 inputProps?.onBlur?.(event);
               }}
               onFocus={(event) => {
-                setOpen(true);
+                console.log("focus" + event.target)
+                 
+                
                 triggerSearchOnFocus && onSearch?.(debouncedSearchTerm);
                 inputProps?.onFocus?.(event);
               }}
@@ -351,8 +362,8 @@ const MultipleSelector = React.forwardRef(
             </button>
           </div>
         </div>
-        <div className="relative">
-          {open && (
+        {open &&<div className={`relative ${inputValue.length > 0 ? "" : "hidden"}`}>
+           (
             <CommandList
               className="absolute top-1 z-10 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in"
               onMouseLeave={() => {
@@ -381,7 +392,7 @@ const MultipleSelector = React.forwardRef(
                       className="h-full overflow-auto"
                     >
                       <>
-                        {dropdowns.map((option) => {
+                        {inputValue.trim().length > 0&& dropdowns.map((option) => {
                           return (
                             <CommandItem
                               key={option.value}
@@ -417,8 +428,8 @@ const MultipleSelector = React.forwardRef(
                 </>
               )}
             </CommandList>
-          )}
-        </div>
+          )
+        </div>}
       </Command>
     );
   }
