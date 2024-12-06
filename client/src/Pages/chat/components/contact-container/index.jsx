@@ -31,7 +31,7 @@ const ContactsContainer = () => {
   },[setDirectMessageContacts,setChannels])
 
   return (
-    <div className="relative flex-shrink-0 h-fit md:w-[35vw] lg:w-[30vw] xl:w-[20vw] bg-[#0b0b0b] border-r-2 border-[#2f303b] w-full">
+    <div className="relative flex-shrink-0  md:w-[35vw] lg:w-[30vw] xl:w-[20vw] bg-[#0b0b0b] border-r-2 border-[#2f303b] w-full">
       <div className="pt-3">
         <Logo/>
       </div>
@@ -40,16 +40,16 @@ const ContactsContainer = () => {
           <Title text="Direct Messages"/>
           <NewDm></NewDm>
         </div>
-        <div className="max-h-[38vh] overflow-y-auto scrollbar scrollbar-black ">
+        <div className="max-h-[34vh] overflow-y-auto scrollbar scrollbar-black ">
           <ContactList contacts={directMessagesContacts}/>
         </div>
       </div>
-      <div className="my-5">
+      <div className="my-4 h-auto">
         <div className="flex items-center justify-between pr-10 pb-2">
           <Title text="Channels"/>
           <CreateChannel/>
         </div>
-        <div className="max-h-[35vh] sm:max-h-[38vh] overflow-y-auto scrollbar scrollbar-black ">
+        <div className="max-h-[34vh] overflow-y-auto scrollbar scrollbar-black ">
           <ContactList contacts={channels} isChannel={true}/>
         </div>
       </div>

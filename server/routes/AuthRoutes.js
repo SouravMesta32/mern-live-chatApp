@@ -8,6 +8,7 @@ const authRoutes = Router();
 // const upload = multer({
 //     dest:"/uploads/profile/"
 // })
+// upload.single("profile-image"),
 
 authRoutes.post("/signup",signup);
 authRoutes.post("/login",login)
